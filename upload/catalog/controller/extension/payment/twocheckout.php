@@ -9,7 +9,7 @@ class ControllerExtensionPaymentTwoCheckout extends Controller {
 
 		$data['action'] = 'https://www.2checkout.com/checkout/purchase';
 
-		$data['sid'] = $this->config->get('twocheckout_account');
+		$data['sid'] = $this->config->get('payment_twocheckout_account');
 		$data['currency_code'] = $order_info['currency_code'];
 		$data['total'] = $this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false);
 		$data['cart_order_id'] = $this->session->data['order_id'];
@@ -56,13 +56,13 @@ class ControllerExtensionPaymentTwoCheckout extends Controller {
 			);
 		}
 
-		if ($this->config->get('twocheckout_test')) {
+		if ($this->config->get('payment_twocheckout_test')) {
 			$data['demo'] = 'Y';
 		} else {
 			$data['demo'] = '';
 		}
 
-		if ($this->config->get('twocheckout_display')) {
+		if ($this->config->get('payment_twocheckout_display')) {
 			$data['display'] = 'Y';
 		} else {
 			$data['display'] = '';
@@ -70,7 +70,7 @@ class ControllerExtensionPaymentTwoCheckout extends Controller {
 
 		$data['lang'] = $this->session->data['language'];
 
-		$data['return_url'] = $this->url->link('extension/payment/twocheckout/callback', '', true);
+		$data['return_url'] = $this->url->link('extension/payment/twocheckout/callback', 'language=' . $this->config->get('config_language'));
 
 		return $this->load->view('extension/payment/twocheckout', $data);
 	}
@@ -80,15 +80,15 @@ class ControllerExtensionPaymentTwoCheckout extends Controller {
 
 		$order_info = $this->model_checkout_order->getOrder($this->request->post['cart_order_id']);
 
-		if (!$this->config->get('twocheckout_test')) {
+		if (!$this->config->get('payment_twocheckout_test')) {
 			$order_number = $this->request->post['order_number'];
 		} else {
 			$order_number = '1';
 		}
 
-		if (strtoupper(md5($this->config->get('twocheckout_secret') . $this->config->get('twocheckout_account') . $order_number . $this->request->post['total'])) == $this->request->post['key']) {
+		if (strtoupper(md5($this->config->get('payment_twocheckout_secret') . $this->config->get('payment_twocheckout_account') . $order_number . $this->request->post['total'])) == $this->request->post['key']) {
 			if ($this->currency->format($order_info['total'], $order_info['currency_code'], $order_info['currency_value'], false) == $this->request->post['total']) {
-				$this->model_checkout_order->addOrderHistory($this->request->post['cart_order_id'], $this->config->get('twocheckout_order_status_id'));
+				$this->model_checkout_order->addOrderHistory($this->request->post['cart_order_id'], $this->config->get('payment_twocheckout_order_status_id'));
 			} else {
 				$this->model_checkout_order->addOrderHistory($this->request->post['cart_order_id'], $this->config->get('config_order_status_id'));// Ugh. Some one've faked the sum. What should we do? Probably drop a mail to the shop owner?
 			}
@@ -100,10 +100,10 @@ class ControllerExtensionPaymentTwoCheckout extends Controller {
 
 			echo '<html>' . "\n";
 			echo '<head>' . "\n";
-			echo '  <meta http-equiv="Refresh" content="0; url=' . $this->url->link('checkout/success') . '">' . "\n";
+			echo '  <meta http-equiv="Refresh" content="0; url=' . $this->url->link('checkout/success', 'language=' . $this->config->get('config_language')) . '">' . "\n";
 			echo '</head>' . "\n";
 			echo '<body>' . "\n";
-			echo '  <p>Please follow <a href="' . $this->url->link('checkout/success') . '">link</a>!</p>' . "\n";
+			echo '  <p>Please follow <a href="' . $this->url->link('checkout/success', 'language=' . $this->config->get('config_language')) . '">link</a>!</p>' . "\n";
 			echo '</body>' . "\n";
 			echo '</html>' . "\n";
 			exit();

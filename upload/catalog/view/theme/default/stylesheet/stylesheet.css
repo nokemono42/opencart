@@ -335,7 +335,7 @@ footer h5 {
 }
 /* alert */
 .alert {
-	padding: 8px 14px 8px 14px;
+	padding: 8px 35px 8px 14px;
 }
 /* breadcrumb */
 .breadcrumb {
@@ -524,7 +524,7 @@ footer h5 {
 .product-thumb {
 	border: 1px solid #ddd;
 	margin-bottom: 20px;
-	overflow: auto;
+	overflow: hidden;
 }
 .product-thumb .image {
 	text-align: center;
@@ -613,7 +613,7 @@ h2.price {
 .product-thumb .button-group {
 	border-top: 1px solid #ddd;
 	background-color: #eee;
-	overflow: auto;
+	overflow: hidden;
 }
 .product-list .product-thumb .button-group {
 	border-left: 1px solid #ddd;
@@ -743,4 +743,32 @@ h2.price {
 .btn-info:hover, .btn-info:active, .btn-info.active, .btn-info.disabled, .btn-info[disabled] {
     background-image: none;
     background-color: #df5c39;
+}
+
+/* Animate alert box */
+#alert-box {
+	position: fixed;
+	top: 15px;
+	transition: all 0.5s;
+	z-index: 99;
+	right: -50%;
+}
+
+#alert-box.open {
+	right: 15px;
+}
+
+@media screen and (max-width: 767px){
+	#alert-box {
+		padding: 15px;
+	}
+	#alert-box.open {
+		right: 0px;
+	}
+}
+
+/* fixed alert-dismissable close position */
+.alert-dismissable .close,
+.alert-dismissible .close {
+	right: -4px;
 }

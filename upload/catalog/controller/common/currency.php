@@ -3,9 +3,7 @@ class ControllerCommonCurrency extends Controller {
 	public function index() {
 		$this->load->language('common/currency');
 
-		$data['text_currency'] = $this->language->get('text_currency');
-
-		$data['action'] = $this->url->link('common/currency/currency', '', $this->request->server['HTTPS']);
+		$data['action'] = $this->url->link('common/currency/currency', 'language=' . $this->config->get('config_language'));
 
 		$data['code'] = $this->session->data['currency'];
 
@@ -27,7 +25,7 @@ class ControllerCommonCurrency extends Controller {
 		}
 
 		if (!isset($this->request->get['route'])) {
-			$data['redirect'] = $this->url->link('common/home');
+			$data['redirect'] = $this->url->link('common/home', 'language=' . $this->config->get('config_language'));
 		} else {
 			$url_data = $this->request->get;
 
@@ -43,7 +41,7 @@ class ControllerCommonCurrency extends Controller {
 				$url = '&' . urldecode(http_build_query($url_data, '', '&'));
 			}
 
-			$data['redirect'] = $this->url->link($route, $url, $this->request->server['HTTPS']);
+			$data['redirect'] = $this->url->link($route, 'language=' . $this->config->get('config_language') . $url);
 		}
 
 		return $this->load->view('common/currency', $data);
@@ -60,7 +58,7 @@ class ControllerCommonCurrency extends Controller {
 		if (isset($this->request->post['redirect'])) {
 			$this->response->redirect($this->request->post['redirect']);
 		} else {
-			$this->response->redirect($this->url->link('common/home'));
+			$this->response->redirect($this->url->link('common/home', 'language=' . $this->config->get('config_language')));
 		}
 	}
 }
